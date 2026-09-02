@@ -34,41 +34,41 @@ function App() {
       <LanguageProvider>
         <Router>
           {showDisclaimer && (
-            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm animate-in fade-in duration-500">
-              <div className="bg-white max-w-xl w-[90%] rounded-3xl p-8 shadow-2xl relative overflow-hidden animate-in zoom-in-95 duration-500">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm animate-in fade-in duration-500 p-4">
+              <div className="bg-white max-w-xl w-full rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden max-h-[95vh] overflow-y-auto animate-in zoom-in-95 duration-500">
                 {/* Decorative background blob */}
-                <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-100 rounded-full blur-[50px] opacity-70"></div>
+                <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-100 rounded-full blur-[50px] opacity-70 pointer-events-none"></div>
                 
                 <div className="text-center relative z-10">
-                  <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
-                    <Car size={40} />
+                  <div className="w-16 h-16 md:w-20 md:h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-inner">
+                    <Car size={32} className="md:w-10 md:h-10" />
                   </div>
                   
-                  <h1 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">Welcome to SmartPark</h1>
-                  <h2 className="text-lg font-bold text-blue-600 mb-6 uppercase tracking-wider">Smart Parking Booking System</h2>
+                  <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-1 md:mb-2 tracking-tight">Welcome to SmartPark</h1>
+                  <h2 className="text-xs md:text-lg font-bold text-blue-600 mb-4 md:mb-6 uppercase tracking-wider">Smart Parking Booking System</h2>
                   
-                  <p className="text-slate-600 mb-6 leading-relaxed">
+                  <p className="text-sm md:text-base text-slate-600 mb-4 md:mb-6 leading-relaxed px-2">
                     A student-developed <strong>academic mini project</strong> designed to demonstrate a smart, convenient, and digital approach to parking search and reservation.
                   </p>
                   
-                  <p className="text-sm font-bold text-slate-400 mb-6 uppercase tracking-wider">
+                  <p className="text-xs md:text-sm font-bold text-slate-400 mb-4 md:mb-6 uppercase tracking-wider">
                     Developed by Manoj Gowda
                   </p>
                   
-                  <div className="bg-amber-50 border border-amber-200 p-5 rounded-2xl mb-8 text-left flex gap-4">
+                  <div className="bg-amber-50 border border-amber-200 p-4 md:p-5 rounded-2xl mb-6 md:mb-8 text-left flex flex-col sm:flex-row items-center sm:items-start gap-3 md:gap-4 text-center sm:text-left">
                     <AlertTriangle className="text-amber-500 flex-shrink-0" size={24} />
-                    <div className="text-amber-800 text-sm leading-relaxed">
+                    <div className="text-amber-800 text-xs md:text-sm leading-relaxed">
                       <strong>Disclaimer:</strong> This website is created exclusively for educational and demonstration purposes. Parking slots, bookings, payments, and other information may be simulated and do not represent actual commercial services.
                     </div>
                   </div>
                   
-                  <p className="text-slate-500 font-medium mb-8">Thank you for exploring the project.</p>
+                  <p className="text-sm md:text-base text-slate-500 font-medium mb-6 md:mb-8">Thank you for exploring the project.</p>
                   
                   <button 
                     onClick={handleEnter}
-                    className="w-full bg-slate-900 text-white font-black py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-slate-800 transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-slate-900/20"
+                    className="w-full bg-slate-900 text-white font-black py-3 md:py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-slate-800 transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-slate-900/20 text-sm md:text-base"
                   >
-                    Enter SmartPark <ArrowRight size={20} />
+                    Enter SmartPark <ArrowRight size={18} className="md:w-5 md:h-5" />
                   </button>
                 </div>
               </div>
