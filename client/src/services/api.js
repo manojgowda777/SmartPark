@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://olive-geese-run.loca.lt/api',
+    // Use Vercel Environment Variable if available, otherwise default to local development port
+    baseURL: import.meta.env.VITE_API_URL || `http://${window.location.hostname}:5000/api`,
 });
 
 // Add a request interceptor to attach the JWT token
