@@ -99,13 +99,14 @@ exports.createBooking = async (req, res) => {
                     `
                 };
 
-                await transporter.sendMail(mailOptions);
-                console.log(`Confirmation email sent to ${userEmail}`);
+                transporter.sendMail(mailOptions)
+                    .then(() => console.log(`Confirmation email sent to ${userEmail}`))
+                    .catch(emailError => console.error("Failed to send email confirmation:", emailError));
             } else {
                 console.log('Skipped sending email because EMAIL_USER or EMAIL_PASS environment variables are missing.');
             }
         } catch (emailError) {
-            console.error("Failed to send email confirmation:", emailError);
+            console.error("Failed to setup email confirmation:", emailError);
             // We do not fail the booking if email fails!
         }
 
