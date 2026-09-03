@@ -51,12 +51,9 @@ exports.createBooking = async (req, res) => {
         await db.query(`UPDATE bookings SET payment_status = 'PAID', booking_status = 'CONFIRMED' WHERE id = ?`, [booking_id]);
         await db.query(`UPDATE parking_slots SET status = 'BOOKED' WHERE id = ?`, [slot_id]);
 
-        // 6. Send Email Confirmation via HTTP (Resend API to bypass Render Firewall)
+        // 6. Send Email Confirmation via HTTP (Brevo API to bypass Render Firewall and send to anyone)
         try {
-            if (process.env.RESEND_API_KEY) {
-                const { Resend } = require('resend');
-                const resend = new Resend(process.env.RESEND_API_KEY);
-                
+            if (process.env.BREVO_API_KEY && process.env.EMAIL_USER) {
                 // Get user email
                 const [users] = await db.query('SELECT email, name FROM users WHERE id = ?', [user_id]);
                 const userEmail = users[0].email;
@@ -65,36 +62,47 @@ exports.createBooking = async (req, res) => {
                 // Get parking location name for the email
                 const [locations] = await db.query('SELECT name FROM parking_locations WHERE id = ?', [parking_location_id]);
                 const locationName = locations[0].name;
-
-                resend.emails.send({
-                    from: 'SmartPark <onboarding@resend.dev>', // Resend test email sender
-                    to: userEmail,
-                    subject: `🚗 Booking Confirmed - ${locationName}`,
-                    html: `
-                        <div style="font-family: Arial, sans-serif; max-w: 600px; margin: auto; padding: 20px; border-radius: 10px; border: 1px solid #eee; background-color: #f9f9f9;">
-                            <h2 style="color: #2563eb; text-align: center;">SmartPark Booking Confirmed!</h2>
-                            <p>Hi <strong>${userName}</strong>,</p>
-                            <p>Your parking slot has been successfully booked. Here are your details:</p>
-                            
-                            <div style="background-color: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px;">
-                                <p><strong>📍 Location:</strong> ${locationName}</p>
-                                <p><strong>📅 Date:</strong> ${date}</p>
-                                <p><strong>⏰ Time:</strong> ${start_time} (for ${duration} hours)</p>
-                                <p><strong>🚘 Vehicle:</strong> ${vehicle_number}</p>
-                                <p><strong>💵 Amount Paid:</strong> ₹${amount}</p>
-                            </div>
-
-                            <p style="text-align: center; margin-top: 30px; font-size: 12px; color: #888;">
-                                Thank you for using SmartPark! Show this email to the operator if requested.
-                            </p>
+                
+                const htmlContent = `
+                    <div style="font-family: Arial, sans-serif; max-w: 600px; margin: auto; padding: 20px; border-radius: 10px; border: 1px solid #eee; background-color: #f9f9f9;">
+                        <h2 style="color: #2563eb; text-align: center;">SmartPark Booking Confirmed!</h2>
+                        <p>Hi <strong>${userName}</strong>,</p>
+                        <p>Your parking slot has been successfully booked. Here are your details:</p>
+                        
+                        <div style="background-color: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px;">
+                            <p><strong>📍 Location:</strong> ${locationName}</p>
+                            <p><strong>📅 Date:</strong> ${date}</p>
+                            <p><strong>⏰ Time:</strong> ${start_time} (for ${duration} hours)</p>
+                            <p><strong>🚘 Vehicle:</strong> ${vehicle_number}</p>
+                            <p><strong>💵 Amount Paid:</strong> ₹${amount}</p>
                         </div>
-                    `
+
+                        <p style="text-align: center; margin-top: 30px; font-size: 12px; color: #888;">
+                            Thank you for using SmartPark! Show this email to the operator if requested.
+                        </p>
+                    </div>
+                `;
+
+                fetch('https://api.brevo.com/v3/smtp/email', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'api-key': process.env.BREVO_API_KEY
+                    },
+                    body: JSON.stringify({
+                        sender: { name: "SmartPark", email: process.env.EMAIL_USER },
+                        to: [{ email: userEmail }],
+                        subject: `🚗 Booking Confirmed - ${locationName}`,
+                        htmlContent: htmlContent
+                    })
                 })
-                .then(data => console.log(`Confirmation email sent via Resend API:`, data))
-                .catch(emailError => console.error("Failed to send email confirmation via Resend:", emailError));
+                .then(res => res.json())
+                .then(data => console.log(`Confirmation email sent via Brevo API:`, data))
+                .catch(emailError => console.error("Failed to send email confirmation via Brevo:", emailError));
                 
             } else {
-                console.log('Skipped sending email because RESEND_API_KEY is missing.');
+                console.log('Skipped sending email because BREVO_API_KEY is missing.');
             }
         } catch (emailError) {
             console.error("Failed to setup email confirmation:", emailError);
