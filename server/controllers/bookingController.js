@@ -152,3 +152,24 @@ exports.cancelBooking = async (req, res) => {
         res.status(500).json({ message: 'Server Error cancelling booking.' });
     }
 };
+
+exports.testEmail = async (req, res) => {
+    try {
+        if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+            return res.json({ status: 'error', message: 'EMAIL_USER or EMAIL_PASS environment variables are completely missing in Render.' });
+        }
+        const nodemailer = require('nodemailer');
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
+        });
+        await transporter.verify();
+        res.json({ status: 'success', message: 'SMTP connection verified successfully! Email credentials are correct.' });
+    } catch (error) {
+        res.json({ status: 'error', message: error.message, fullError: error });
+    }
+};
+
