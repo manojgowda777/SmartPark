@@ -244,7 +244,7 @@ const Booking = () => {
                                         {/* Scanner Line */}
                                         <div className="absolute top-0 left-0 w-full h-1 bg-green-400 shadow-[0_0_15px_#4ade80] animate-[float_2s_ease-in-out_infinite] z-20" style={{ animationName: 'scan' }}></div>
                                         <img 
-                                            src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=manojrgowda.1213@okicici&pn=SmartPark&am=${bookingData.amount}&cu=INR`}
+                                            src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=smartpark@upi&pn=SmartPark&am=${bookingData.amount}&cu=INR`}
                                             alt="UPI QR Code" 
                                             className="w-48 h-48 relative z-10 mix-blend-multiply"
                                         />
