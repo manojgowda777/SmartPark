@@ -163,3 +163,28 @@ exports.testEmail = async (req, res) => {
     }
 };
 
+
+exports.testResend = async (req, res) => {
+    try {
+        if (!process.env.RESEND_API_KEY) {
+            return res.json({ status: 'error', message: 'RESEND_API_KEY is missing in Render environment variables.' });
+        }
+        const { Resend } = require('resend');
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        
+        // Use a test email provided in the query string or default to a dummy string (which will cause a readable error)
+        const toEmail = req.query.email || 'test@example.com';
+
+        const data = await resend.emails.send({
+            from: 'SmartPark <onboarding@resend.dev>',
+            to: toEmail,
+            subject: 'Test Resend API',
+            html: '<p>This is a test from SmartPark API</p>'
+        });
+
+        res.json({ status: 'success', data });
+    } catch (error) {
+        res.json({ status: 'error', message: error.message, fullError: error });
+    }
+};
+
