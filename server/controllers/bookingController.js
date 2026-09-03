@@ -51,6 +51,64 @@ exports.createBooking = async (req, res) => {
         await db.query(`UPDATE bookings SET payment_status = 'PAID', booking_status = 'CONFIRMED' WHERE id = ?`, [booking_id]);
         await db.query(`UPDATE parking_slots SET status = 'BOOKED' WHERE id = ?`, [slot_id]);
 
+        // 6. Send Email Confirmation via Nodemailer
+        try {
+            const nodemailer = require('nodemailer');
+            
+            // Get user email
+            const [users] = await db.query('SELECT email, name FROM users WHERE id = ?', [user_id]);
+            const userEmail = users[0].email;
+            const userName = users[0].name;
+
+            // Get parking location name for the email
+            const [locations] = await db.query('SELECT name FROM parking_locations WHERE id = ?', [parking_location_id]);
+            const locationName = locations[0].name;
+
+            // Only attempt to send if email credentials exist
+            if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+                const transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: process.env.EMAIL_USER,
+                        pass: process.env.EMAIL_PASS
+                    }
+                });
+
+                const mailOptions = {
+                    from: `"SmartPark System" <${process.env.EMAIL_USER}>`,
+                    to: userEmail,
+                    subject: `🚗 Booking Confirmed - ${locationName}`,
+                    html: `
+                        <div style="font-family: Arial, sans-serif; max-w: 600px; margin: auto; padding: 20px; border-radius: 10px; border: 1px solid #eee; background-color: #f9f9f9;">
+                            <h2 style="color: #2563eb; text-align: center;">SmartPark Booking Confirmed!</h2>
+                            <p>Hi <strong>${userName}</strong>,</p>
+                            <p>Your parking slot has been successfully booked. Here are your details:</p>
+                            
+                            <div style="background-color: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px;">
+                                <p><strong>📍 Location:</strong> ${locationName}</p>
+                                <p><strong>📅 Date:</strong> ${date}</p>
+                                <p><strong>⏰ Time:</strong> ${start_time} (for ${duration} hours)</p>
+                                <p><strong>🚘 Vehicle:</strong> ${vehicle_number}</p>
+                                <p><strong>💵 Amount Paid:</strong> ₹${amount}</p>
+                            </div>
+
+                            <p style="text-align: center; margin-top: 30px; font-size: 12px; color: #888;">
+                                Thank you for using SmartPark! Show this email to the operator if requested.
+                            </p>
+                        </div>
+                    `
+                };
+
+                await transporter.sendMail(mailOptions);
+                console.log(`Confirmation email sent to ${userEmail}`);
+            } else {
+                console.log('Skipped sending email because EMAIL_USER or EMAIL_PASS environment variables are missing.');
+            }
+        } catch (emailError) {
+            console.error("Failed to send email confirmation:", emailError);
+            // We do not fail the booking if email fails!
+        }
+
         res.status(201).json({
             message: 'Booking confirmed successfully!',
             booking_id
