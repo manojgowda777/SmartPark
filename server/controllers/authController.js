@@ -31,6 +31,38 @@ exports.register = async (req, res) => {
             { expiresIn: '1d' }
         );
 
+        // Send Welcome Email via Resend
+        try {
+            if (process.env.RESEND_API_KEY) {
+                const { Resend } = require('resend');
+                const resend = new Resend(process.env.RESEND_API_KEY);
+                
+                resend.emails.send({
+                    from: 'SmartPark <onboarding@resend.dev>',
+                    to: email,
+                    subject: '🎉 Welcome to SmartPark!',
+                    html: `
+                        <div style="font-family: Arial, sans-serif; max-w: 600px; margin: auto; padding: 20px; border-radius: 10px; border: 1px solid #eee; background-color: #f9f9f9;">
+                            <h2 style="color: #2563eb; text-align: center;">Welcome to SmartPark, ${name}!</h2>
+                            <p>We are thrilled to have you on board.</p>
+                            <p>With SmartPark, you can easily find and book parking slots anywhere in the city instantly.</p>
+                            <div style="background-color: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; text-align: center;">
+                                <p style="margin: 0; font-size: 16px;"><strong>Ready to park?</strong></p>
+                                <p style="color: #888; font-size: 14px;">Log in to the app and book your first slot!</p>
+                            </div>
+                            <p style="text-align: center; margin-top: 30px; font-size: 12px; color: #888;">
+                                Thank you for joining the SmartPark ecosystem.
+                            </p>
+                        </div>
+                    `
+                })
+                .then(data => console.log(`Welcome email sent to ${email}`))
+                .catch(err => console.error("Resend welcome email failed:", err));
+            }
+        } catch (emailErr) {
+            console.error("Email setup failed:", emailErr);
+        }
+
         res.status(201).json({
             token,
             user: {
