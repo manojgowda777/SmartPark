@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+﻿import React, { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, Clock, Star, ArrowLeft } from 'lucide-react';
 import api from '../services/api';
@@ -132,16 +132,16 @@ const ParkingDetails = () => {
                                     SELECT A SLOT
                                 </h2>
                                 {/* Modern Legend */}
-                                <div className="flex flex-wrap gap-4 text-xs font-bold text-slate-300 bg-slate-900/80 backdrop-blur-md px-6 py-3 rounded-full border border-slate-700/50 shadow-inner">
+                                <div className="flex flex-wrap gap-4 text-xs font-bold text-slate-600 bg-white/80 backdrop-blur-md px-6 py-3 rounded-full border border-slate-200 shadow-inner">
                                     <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e]"></div> {t.free || 'Available'}</span>
                                     <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]"></div> {t.full || 'Occupied'}</span>
                                     <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_8px_#eab308]"></div> Reserved</span>
-                                    <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4]"></div> ⚡ EV</span>
+                                    <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4]"></div> âš¡ EV</span>
                                     <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_10px_#3b82f6] border border-blue-200 animate-pulse"></div> {t.selected || 'Selected'}</span>
                                 </div>
                             </div>
 
-                            <div className="bg-slate-900/60 p-6 md:p-12 rounded-2xl border border-slate-700/50 overflow-x-auto relative shadow-[inset_0_0_40px_rgba(0,0,0,0.5)]">
+                            <div className="bg-white/60 p-6 md:p-12 rounded-2xl border border-slate-200 overflow-x-auto relative shadow-[inset_0_0_40px_rgba(0,0,0,0.5)]">
                                 
                                 {/* Animated Lane Cars (Subtle Background Simulation) */}
                                 <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl z-0">
@@ -159,7 +159,7 @@ const ParkingDetails = () => {
                                 <div className="min-w-max relative z-10 flex flex-col items-center">
                                     {/* Entrance Indicator */}
                                     <div className="text-center text-green-400 text-xs font-black tracking-[0.3em] uppercase mb-8 border border-green-500/30 bg-green-500/10 px-8 py-2 rounded-full shadow-[0_0_15px_rgba(34,197,94,0.15)] backdrop-blur-md">
-                                        ↓ {t.entrance || 'ENTRANCE'} ↓
+                                        â†“ {t.entrance || 'ENTRANCE'} â†“
                                     </div>
 
                                     {/* Parking Lot Structure */}
@@ -177,21 +177,21 @@ const ParkingDetails = () => {
                                                             disabled={slot.status !== 'AVAILABLE'}
                                                             className={`
                                                                 relative h-36 w-24 rounded-t-xl border-x-4 border-t-4 flex flex-col items-center justify-start pt-4 transition-all duration-300 overflow-hidden
-                                                                ${slot.status === 'AVAILABLE' && selectedSlot !== slot.id && !isEV ? 'border-green-500/50 bg-green-950/20 hover:bg-green-900/40 hover:-translate-y-2 hover:shadow-[0_10px_20px_rgba(34,197,94,0.2)] cursor-pointer' : ''}
-                                                                ${slot.status === 'AVAILABLE' && selectedSlot !== slot.id && isEV ? 'border-cyan-500/50 bg-cyan-950/20 hover:bg-cyan-900/40 hover:-translate-y-2 hover:shadow-[0_10px_20px_rgba(6,182,212,0.3)] cursor-pointer' : ''}
-                                                                ${slot.status !== 'AVAILABLE' && !isReserved ? 'border-red-500/30 bg-red-950/30 cursor-not-allowed opacity-80' : ''}
-                                                                ${isReserved ? 'border-yellow-500/40 bg-yellow-950/30 cursor-not-allowed opacity-80' : ''}
-                                                                ${selectedSlot === slot.id ? 'border-blue-400 bg-blue-900/40 shadow-[0_0_30px_rgba(59,130,246,0.6)] ring-4 ring-blue-500/50 scale-105 z-20' : ''}
-                                                                after:content-[''] after:absolute after:bottom-0 after:w-full after:h-1 after:bg-white/10
+                                                                ${slot.status === 'AVAILABLE' && selectedSlot !== slot.id && !isEV ? 'border-emerald-500 bg-emerald-100 hover:bg-emerald-200 hover:-translate-y-2 hover:shadow-[0_10px_20px_rgba(34,197,94,0.2)] cursor-pointer' : ''}
+                                                                ${slot.status === 'AVAILABLE' && selectedSlot !== slot.id && isEV ? 'border-cyan-500 bg-cyan-100 hover:bg-cyan-200 hover:-translate-y-2 hover:shadow-[0_10px_20px_rgba(6,182,212,0.3)] cursor-pointer' : ''}
+                                                                ${slot.status !== 'AVAILABLE' && !isReserved ? 'border-red-500 bg-red-100 cursor-not-allowed opacity-80' : ''}
+                                                                ${isReserved ? 'border-amber-500 bg-amber-100 cursor-not-allowed opacity-80' : ''}
+                                                                ${selectedSlot === slot.id ? 'border-blue-400 bg-blue-100 shadow-[0_0_30px_rgba(59,130,246,0.6)] ring-4 ring-blue-500/50 scale-105 z-20' : ''}
+                                                                after:content-[''] after:absolute after:bottom-0 after:w-full after:h-1 after:bg-slate-300
                                                             `}
                                                         >
                                                             {/* Slot Number Label */}
-                                                            <span className={`font-black text-xl z-10 ${slot.status === 'AVAILABLE' ? 'text-slate-300' : 'text-slate-500'}`}>
+                                                            <span className={`font-black text-xl z-10 ${slot.status === 'AVAILABLE' ? 'text-slate-600' : 'text-slate-500'}`}>
                                                                 {slot.slot_number}
                                                             </span>
                                                             
                                                             {/* EV Indicator */}
-                                                            {isEV && <span className="absolute top-2 right-2 text-cyan-400 text-sm animate-pulse z-10">⚡</span>}
+                                                            {isEV && <span className="absolute top-2 right-2 text-cyan-400 text-sm animate-pulse z-10">âš¡</span>}
 
                                                             {/* Cars for occupied/reserved */}
                                                             {(slot.status !== 'AVAILABLE' || isReserved) && (
@@ -207,9 +207,9 @@ const ParkingDetails = () => {
                                                         </button>
 
                                                         {/* Hover Tooltip */}
-                                                        <div className="absolute -top-16 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs py-2 px-4 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-30 border border-slate-700/50 backdrop-blur-md">
-                                                            <div className="font-bold text-sm text-blue-400 mb-1">{slot.slot_number} {isEV && '⚡'}</div>
-                                                            <div className="text-slate-300">₹{slot.price_per_hour}/hr • {slot.slot_type}</div>
+                                                        <div className="absolute -top-16 left-1/2 -translate-x-1/2 bg-white text-slate-900 text-xs py-2 px-4 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-30 border border-slate-200 backdrop-blur-md">
+                                                            <div className="font-bold text-sm text-blue-400 mb-1">{slot.slot_number} {isEV && 'âš¡'}</div>
+                                                            <div className="text-slate-600">â‚¹{slot.price_per_hour}/hr â€¢ {slot.slot_type}</div>
                                                             {slot.status !== 'AVAILABLE' && <div className="text-red-400 mt-1 font-semibold">{isReserved ? 'Reserved' : 'Occupied'}</div>}
                                                         </div>
                                                     </div>
@@ -221,8 +221,8 @@ const ParkingDetails = () => {
                                         <div className="absolute top-1/2 -translate-y-1/2 w-full h-16 flex items-center justify-center pointer-events-none">
                                             <div className="w-full h-0 border-t-4 border-dashed border-yellow-500/30"></div>
                                             {/* Directional Arrows */}
-                                            <div className="absolute left-4 text-yellow-500/40 text-3xl font-black tracking-widest">→ →</div>
-                                            <div className="absolute right-4 text-yellow-500/40 text-3xl font-black tracking-widest">→ →</div>
+                                            <div className="absolute left-4 text-yellow-500/40 text-3xl font-black tracking-widest">â†’ â†’</div>
+                                            <div className="absolute right-4 text-yellow-500/40 text-3xl font-black tracking-widest">â†’ â†’</div>
                                         </div>
 
                                         {/* Bottom Row */}
@@ -237,21 +237,21 @@ const ParkingDetails = () => {
                                                             disabled={slot.status !== 'AVAILABLE'}
                                                             className={`
                                                                 relative h-36 w-24 rounded-b-xl border-x-4 border-b-4 flex flex-col items-center justify-end pb-4 transition-all duration-300 overflow-hidden
-                                                                ${slot.status === 'AVAILABLE' && selectedSlot !== slot.id && !isEV ? 'border-green-500/50 bg-green-950/20 hover:bg-green-900/40 hover:translate-y-2 hover:shadow-[0_10px_20px_rgba(34,197,94,0.2)] cursor-pointer' : ''}
-                                                                ${slot.status === 'AVAILABLE' && selectedSlot !== slot.id && isEV ? 'border-cyan-500/50 bg-cyan-950/20 hover:bg-cyan-900/40 hover:translate-y-2 hover:shadow-[0_10px_20px_rgba(6,182,212,0.3)] cursor-pointer' : ''}
-                                                                ${slot.status !== 'AVAILABLE' && !isReserved ? 'border-red-500/30 bg-red-950/30 cursor-not-allowed opacity-80' : ''}
-                                                                ${isReserved ? 'border-yellow-500/40 bg-yellow-950/30 cursor-not-allowed opacity-80' : ''}
-                                                                ${selectedSlot === slot.id ? 'border-blue-400 bg-blue-900/40 shadow-[0_0_30px_rgba(59,130,246,0.6)] ring-4 ring-blue-500/50 scale-105 z-20' : ''}
-                                                                after:content-[''] after:absolute after:top-0 after:w-full after:h-1 after:bg-white/10
+                                                                ${slot.status === 'AVAILABLE' && selectedSlot !== slot.id && !isEV ? 'border-emerald-500 bg-emerald-100 hover:bg-emerald-200 hover:translate-y-2 hover:shadow-[0_10px_20px_rgba(34,197,94,0.2)] cursor-pointer' : ''}
+                                                                ${slot.status === 'AVAILABLE' && selectedSlot !== slot.id && isEV ? 'border-cyan-500 bg-cyan-100 hover:bg-cyan-200 hover:translate-y-2 hover:shadow-[0_10px_20px_rgba(6,182,212,0.3)] cursor-pointer' : ''}
+                                                                ${slot.status !== 'AVAILABLE' && !isReserved ? 'border-red-500 bg-red-100 cursor-not-allowed opacity-80' : ''}
+                                                                ${isReserved ? 'border-amber-500 bg-amber-100 cursor-not-allowed opacity-80' : ''}
+                                                                ${selectedSlot === slot.id ? 'border-blue-400 bg-blue-100 shadow-[0_0_30px_rgba(59,130,246,0.6)] ring-4 ring-blue-500/50 scale-105 z-20' : ''}
+                                                                after:content-[''] after:absolute after:top-0 after:w-full after:h-1 after:bg-slate-300
                                                             `}
                                                         >
                                                             {/* Slot Number Label */}
-                                                            <span className={`font-black text-xl z-10 ${slot.status === 'AVAILABLE' ? 'text-slate-300' : 'text-slate-500'}`}>
+                                                            <span className={`font-black text-xl z-10 ${slot.status === 'AVAILABLE' ? 'text-slate-600' : 'text-slate-500'}`}>
                                                                 {slot.slot_number}
                                                             </span>
                                                             
                                                             {/* EV Indicator */}
-                                                            {isEV && <span className="absolute bottom-2 right-2 text-cyan-400 text-sm animate-pulse z-10">⚡</span>}
+                                                            {isEV && <span className="absolute bottom-2 right-2 text-cyan-400 text-sm animate-pulse z-10">âš¡</span>}
 
                                                             {/* Cars for occupied/reserved */}
                                                             {(slot.status !== 'AVAILABLE' || isReserved) && (
@@ -267,9 +267,9 @@ const ParkingDetails = () => {
                                                         </button>
 
                                                         {/* Hover Tooltip */}
-                                                        <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs py-2 px-4 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-30 border border-slate-700/50 backdrop-blur-md">
-                                                            <div className="font-bold text-sm text-blue-400 mb-1">{slot.slot_number} {isEV && '⚡'}</div>
-                                                            <div className="text-slate-300">₹{slot.price_per_hour}/hr • {slot.slot_type}</div>
+                                                        <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 bg-white text-slate-900 text-xs py-2 px-4 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-30 border border-slate-200 backdrop-blur-md">
+                                                            <div className="font-bold text-sm text-blue-400 mb-1">{slot.slot_number} {isEV && 'âš¡'}</div>
+                                                            <div className="text-slate-600">â‚¹{slot.price_per_hour}/hr â€¢ {slot.slot_type}</div>
                                                             {slot.status !== 'AVAILABLE' && <div className="text-red-400 mt-1 font-semibold">{isReserved ? 'Reserved' : 'Occupied'}</div>}
                                                         </div>
                                                     </div>
@@ -280,7 +280,7 @@ const ParkingDetails = () => {
 
                                     {/* Exit Indicator */}
                                     <div className="text-center text-slate-400 text-xs font-black tracking-[0.3em] uppercase mt-8 border border-slate-700 bg-slate-800/50 px-8 py-2 rounded-full shadow-inner backdrop-blur-md">
-                                        ↑ EXIT ↑
+                                        â†‘ EXIT â†‘
                                     </div>
                                 </div>
                             </div>
@@ -321,11 +321,11 @@ const ParkingDetails = () => {
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <span className="text-slate-500">{t.rate}</span>
-                                    <span className="font-medium text-slate-900">₹{slots[0]?.price_per_hour}/hr</span>
+                                    <span className="font-medium text-slate-900">â‚¹{slots[0]?.price_per_hour}/hr</span>
                                 </div>
                                 <div className="flex justify-between text-lg font-bold mt-2 pt-2 border-t border-dashed border-slate-200">
                                     <span className="text-slate-900">{t.total}</span>
-                                    <span className="text-blue-600">₹{slots[0]?.price_per_hour || 0}</span>
+                                    <span className="text-blue-600">â‚¹{slots[0]?.price_per_hour || 0}</span>
                                 </div>
                             </div>
 

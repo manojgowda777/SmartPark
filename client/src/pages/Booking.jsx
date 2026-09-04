@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+﻿import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { CheckCircle, CreditCard, Car, Calendar as CalendarIcon, MapPin } from 'lucide-react';
 import api from '../services/api';
@@ -20,7 +20,7 @@ const Booking = () => {
     const [paymentMethod, setPaymentMethod] = useState('upi');
     
     // In a real app, we'd fetch slot details. For simplicity here, we'll mock the details based on URL 
-    // or fetch from an endpoint. Let's assume price is ₹40.
+    // or fetch from an endpoint. Let's assume price is â‚¹40.
     const [bookingData, setBookingData] = useState({
         vehicle_number: '',
         date: new Date().toISOString().split('T')[0],
@@ -101,7 +101,7 @@ const Booking = () => {
                     {/* Step 1: Vehicle & Time Details */}
                     {step === 1 && (
                         <div className="space-y-6 animate-in fade-in">
-                            <h2 className="text-2xl font-bold text-slate-900 mb-6">{tDet.summary}</h2>
+                            <h2 className="text-2xl font-bold text-[#0B1533] mb-6">{tDet.summary}</h2>
                             
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-2">{t.vehicle}</label>
@@ -134,10 +134,10 @@ const Booking = () => {
                                         value={bookingData.duration}
                                         onChange={handleDurationChange}
                                     >
-                                        <option value={1}>1 Hour (₹40)</option>
-                                        <option value={2}>2 Hours (₹80)</option>
-                                        <option value={3}>3 Hours (₹120)</option>
-                                        <option value={4}>4 Hours (₹160)</option>
+                                        <option value={1}>1 Hour (â‚¹40)</option>
+                                        <option value={2}>2 Hours (â‚¹80)</option>
+                                        <option value={3}>3 Hours (â‚¹120)</option>
+                                        <option value={4}>4 Hours (â‚¹160)</option>
                                     </select>
                                 </div>
                             </div>
@@ -154,24 +154,24 @@ const Booking = () => {
                     {/* Step 2: Summary */}
                     {step === 2 && (
                         <div className="space-y-6 animate-in fade-in">
-                            <h2 className="text-2xl font-bold text-slate-900 mb-6">Booking Summary</h2>
+                            <h2 className="text-2xl font-bold text-[#0B1533] mb-6">Booking Summary</h2>
                             
                             <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 space-y-4">
                                 <div className="flex justify-between items-center pb-4 border-b border-slate-200">
                                     <span className="text-slate-600 flex items-center gap-2"><Car size={18}/> Vehicle</span>
-                                    <span className="font-bold text-slate-900">{bookingData.vehicle_number}</span>
+                                    <span className="font-bold text-[#0B1533]">{bookingData.vehicle_number}</span>
                                 </div>
                                 <div className="flex justify-between items-center pb-4 border-b border-slate-200">
                                     <span className="text-slate-600 flex items-center gap-2"><MapPin size={18}/> Location & Slot</span>
-                                    <span className="font-bold text-slate-900">City Center • Slot {slotId}</span>
+                                    <span className="font-bold text-[#0B1533]">City Center â€¢ Slot {slotId}</span>
                                 </div>
                                 <div className="flex justify-between items-center pb-4 border-b border-slate-200">
                                     <span className="text-slate-600 flex items-center gap-2"><CalendarIcon size={18}/> {tDet.date} & Time</span>
-                                    <span className="font-bold text-slate-900">{bookingData.date} • {bookingData.duration} hrs</span>
+                                    <span className="font-bold text-[#0B1533]">{bookingData.date} â€¢ {bookingData.duration} hrs</span>
                                 </div>
                                 <div className="flex justify-between items-center text-lg pt-2">
-                                    <span className="font-bold text-slate-900">Total Amount</span>
-                                    <span className="font-bold text-blue-600">₹{bookingData.amount}</span>
+                                    <span className="font-bold text-[#0B1533]">Total Amount</span>
+                                    <span className="font-bold text-blue-600">â‚¹{bookingData.amount}</span>
                                 </div>
                             </div>
 
@@ -190,7 +190,7 @@ const Booking = () => {
                     {step === 3 && (
                         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
                             <div className="text-center relative">
-                                <h2 className="text-4xl font-black text-slate-900 mb-2 relative z-10">Secure Checkout</h2>
+                                <h2 className="text-4xl font-black text-[#0B1533] mb-2 relative z-10">Secure Checkout</h2>
                                 <p className="text-slate-500 font-medium relative z-10">Choose your preferred payment method</p>
                             </div>
                             
@@ -200,7 +200,7 @@ const Booking = () => {
                                 <div className="absolute -inset-[100%] animate-spin-slow opacity-20" style={{ background: 'conic-gradient(from 90deg at 50% 50%, #00000000 50%, #3b82f6 100%)' }}></div>
                                 <div className="relative z-10">
                                     <p className="text-sm font-bold text-blue-200 uppercase tracking-widest mb-3 animate-pulse">Total Amount</p>
-                                    <p className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-100 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">₹{bookingData.amount}</p>
+                                    <p className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-100 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">â‚¹{bookingData.amount}</p>
                                 </div>
                             </div>
 
@@ -210,7 +210,7 @@ const Booking = () => {
                                         <CreditCard size={24} />
                                     </div>
                                     <div className="flex-1">
-                                        <span className="block font-black text-slate-900 text-lg">Credit / Debit Card</span>
+                                        <span className="block font-black text-[#0B1533] text-lg">Credit / Debit Card</span>
                                         <span className="text-sm text-slate-500 font-medium">Pay securely with your bank card</span>
                                     </div>
                                     <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${paymentMethod === 'card' ? 'border-blue-600' : 'border-slate-300'}`}>
@@ -223,7 +223,7 @@ const Booking = () => {
                                         <div className="w-6 h-6 font-black text-center leading-6 text-sm">UPI</div>
                                     </div>
                                     <div className="flex-1">
-                                        <span className="block font-black text-slate-900 text-lg flex items-center gap-2">UPI / QR Code <span className="text-[10px] bg-gradient-to-r from-purple-600 to-pink-500 text-white px-2 py-0.5 rounded-full font-black uppercase tracking-wider animate-pulse">Fastest</span></span>
+                                        <span className="block font-black text-[#0B1533] text-lg flex items-center gap-2">UPI / QR Code <span className="text-[10px] bg-gradient-to-r from-purple-600 to-pink-500 text-white px-2 py-0.5 rounded-full font-black uppercase tracking-wider animate-pulse">Fastest</span></span>
                                         <span className="text-sm text-slate-500 font-medium">GPay, PhonePe, Paytm, etc.</span>
                                     </div>
                                     <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${paymentMethod === 'upi' ? 'border-purple-600' : 'border-slate-300'}`}>
@@ -266,10 +266,10 @@ const Booking = () => {
                                 <div className="mt-8 p-8 border-2 border-blue-100 rounded-3xl bg-slate-50 flex flex-col animate-in zoom-in-95 duration-500 shadow-inner">
                                     <div className="relative mb-6 pb-6 border-b-2 border-slate-200 border-dashed">
                                         <p className="text-sm font-bold text-slate-500 mb-1">Total to Deduct</p>
-                                        <p className="text-4xl font-black text-slate-900">₹{bookingData.amount}</p>
+                                        <p className="text-4xl font-black text-[#0B1533]">â‚¹{bookingData.amount}</p>
                                     </div>
                                     <div className="space-y-4">
-                                        <input type="text" placeholder="Card Number" className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none" defaultValue="•••• •••• •••• 4242" />
+                                        <input type="text" placeholder="Card Number" className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none" defaultValue="â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ 4242" />
                                         <div className="flex gap-4">
                                             <input type="text" placeholder="MM/YY" className="w-1/2 px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none" defaultValue="12/28" />
                                             <input type="password" placeholder="CVV" className="w-1/2 px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none" defaultValue="123" />
@@ -330,26 +330,26 @@ const Booking = () => {
                                         <div className="grid grid-cols-2 gap-y-6 gap-x-4 mb-6">
                                             <div>
                                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Vehicle</p>
-                                                <p className="font-black text-slate-900 text-lg">{bookingData.vehicle_number.toUpperCase()}</p>
+                                                <p className="font-black text-[#0B1533] text-lg">{bookingData.vehicle_number.toUpperCase()}</p>
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{tDet.date}</p>
-                                                <p className="font-black text-slate-900 text-lg">{bookingData.date}</p>
+                                                <p className="font-black text-[#0B1533] text-lg">{bookingData.date}</p>
                                             </div>
                                             <div>
                                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Time</p>
-                                                <p className="font-black text-slate-900 text-lg">{bookingData.start_time}</p>
+                                                <p className="font-black text-[#0B1533] text-lg">{bookingData.start_time}</p>
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Duration</p>
-                                                <p className="font-black text-slate-900 text-lg">{bookingData.duration} hrs</p>
+                                                <p className="font-black text-[#0B1533] text-lg">{bookingData.duration} hrs</p>
                                             </div>
                                         </div>
                                         
                                         <div className="bg-slate-100 p-4 rounded-xl flex items-center justify-between border-2 border-slate-200">
                                             <div>
                                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Amount Paid</p>
-                                                <p className="font-black text-blue-600 text-2xl">₹{bookingData.amount}</p>
+                                                <p className="font-black text-blue-600 text-2xl">â‚¹{bookingData.amount}</p>
                                             </div>
                                             <div className="h-12 w-24 flex gap-1">
                                                 {/* Fake Barcode */}

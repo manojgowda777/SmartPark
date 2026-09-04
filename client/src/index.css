@@ -1,4 +1,16 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
+
+@theme {
+  --color-midnight: #0B1533;
+  --color-azure: #2563EB;
+  --color-indigo: #6366F1;
+  --color-sky: #38BDF8;
+  --color-ice: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-slatenavy: #0F172A;
+  --color-slatemed: #64748B;
+  --color-border-soft: #E2E8F0;
+}
 
 html.dark {
   filter: invert(1) hue-rotate(180deg);
@@ -37,6 +49,9 @@ html.dark img, html.dark video, html.dark iframe, html.dark .leaflet-container {
   .glass-card {
     @apply bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(31,38,135,0.37)];
   }
+  .animate-drive {
+    animation: drive 15s linear infinite;
+  }
 }
 
 @keyframes float {
@@ -66,12 +81,6 @@ html.dark img, html.dark video, html.dark iframe, html.dark .leaflet-container {
 @keyframes scan {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(180px); }
-}
-
-@layer utilities {
-  .animate-drive {
-    animation: drive 15s linear infinite;
-  }
 }
 
 @keyframes drive {
