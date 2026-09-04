@@ -54,6 +54,12 @@ const Booking = () => {
             await api.post('/bookings', bookingData);
             setSuccess(true);
             setStep(4);
+            
+            // Play drift/skid sound on success
+            const audio = new Audio('https://actions.google.com/sounds/v1/transportation/tires_squeal_and_skid.ogg');
+            audio.volume = 0.6;
+            audio.play().catch(err => console.log('Audio playback prevented by browser:', err));
+            
         } catch (err) {
             setError(err.response?.data?.message || 'Payment failed. Please try again.');
         } finally {
