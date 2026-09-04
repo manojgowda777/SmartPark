@@ -109,53 +109,178 @@ const ParkingDetails = () => {
                             </div>
                         </div>
 
-                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-xl font-bold text-slate-900">Select a Slot</h2>
-                                <div className="flex gap-4 text-xs font-medium">
-                                    <span className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-green-500"></div> {t.free}</span>
-                                    <span className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-red-500"></div> {t.full}</span>
-                                    <span className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-blue-600"></div> {t.selected}</span>
+                        <style>{`
+                            @keyframes slideRight {
+                                0% { transform: translateX(-100px); opacity: 0; }
+                                10% { opacity: 0.5; }
+                                90% { opacity: 0.5; }
+                                100% { transform: translateX(800px); opacity: 0; }
+                            }
+                            @keyframes slideLeft {
+                                0% { transform: translateX(100px); opacity: 0; }
+                                10% { opacity: 0.5; }
+                                90% { opacity: 0.5; }
+                                100% { transform: translateX(-800px); opacity: 0; }
+                            }
+                        `}</style>
+                        <div className="bg-slate-950 p-6 rounded-3xl shadow-2xl border border-slate-800 relative overflow-hidden">
+                            {/* Futuristic Background Elements */}
+                            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-slate-950 to-slate-950 pointer-events-none"></div>
+                            
+                            <div className="relative z-10 flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                                <h2 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 drop-shadow-[0_0_10px_rgba(6,182,212,0.3)] tracking-wide">
+                                    SELECT A SLOT
+                                </h2>
+                                {/* Modern Legend */}
+                                <div className="flex flex-wrap gap-4 text-xs font-bold text-slate-300 bg-slate-900/80 backdrop-blur-md px-6 py-3 rounded-full border border-slate-700/50 shadow-inner">
+                                    <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e]"></div> {t.free || 'Available'}</span>
+                                    <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]"></div> {t.full || 'Occupied'}</span>
+                                    <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_8px_#eab308]"></div> Reserved</span>
+                                    <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4]"></div> ⚡ EV</span>
+                                    <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_10px_#3b82f6] border border-blue-200 animate-pulse"></div> {t.selected || 'Selected'}</span>
                                 </div>
                             </div>
 
-                            <div className="bg-slate-100 p-8 rounded-xl border border-slate-200 overflow-x-auto">
-                                <div className="min-w-max">
-                                    <div className="text-center text-slate-400 text-xs font-bold tracking-widest uppercase mb-8 border-b border-dashed border-slate-300 pb-2">{t.entrance}</div>
-                                    <div className="grid grid-cols-4 md:grid-cols-6 gap-x-2 gap-y-12">
-                                        {slots.map(slot => (
-                                            <button 
-                                                key={slot.id}
-                                                onClick={() => handleSlotSelect(slot)}
-                                                disabled={slot.status !== 'AVAILABLE'}
-                                                className={`
-                                                    relative h-32 w-20 md:w-24 border-x-4 border-t-4 border-yellow-400 flex flex-col items-center justify-center transition-all overflow-hidden bg-slate-800
-                                                    ${slot.status === 'AVAILABLE' && selectedSlot !== slot.id ? 'hover:bg-slate-700 cursor-pointer shadow-[inset_0_0_20px_rgba(34,197,94,0.1)]' : ''}
-                                                    ${slot.status !== 'AVAILABLE' ? 'cursor-not-allowed bg-slate-900/80 shadow-[inset_0_0_30px_rgba(239,68,68,0.2)]' : ''}
-                                                    ${selectedSlot === slot.id ? 'shadow-[inset_0_0_30px_rgba(59,130,246,0.5)] ring-4 ring-blue-500 bg-slate-700 scale-105 z-10' : ''}
-                                                `}
-                                            >
-                                                <span className="absolute top-2 font-black text-slate-400 text-lg">{slot.slot_number}</span>
-                                                
-                                                {slot.status !== 'AVAILABLE' && (
-                                                    <div className="absolute inset-0 flex items-center justify-center animate-pulse" style={{ animationDuration: '3s' }}>
-                                                        <img src="/car.png" alt="Car" className="w-16 h-auto drop-shadow-2xl grayscale opacity-50 -rotate-90" />
+                            <div className="bg-slate-900/60 p-6 md:p-12 rounded-2xl border border-slate-700/50 overflow-x-auto relative shadow-[inset_0_0_40px_rgba(0,0,0,0.5)]">
+                                
+                                {/* Animated Lane Cars (Subtle Background Simulation) */}
+                                <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl z-0">
+                                    {/* Top Lane Animation */}
+                                    <div className="absolute top-[35%] left-[-100px] flex gap-40 animate-[slideRight_15s_linear_infinite] opacity-40">
+                                        <div className="w-10 h-6 bg-cyan-400 rounded-md shadow-[0_0_15px_#06b6d4] relative"><div className="absolute right-0 top-1/2 w-4 h-full bg-yellow-100/50 rounded-r-md -translate-y-1/2 blur-[1px]"></div></div>
+                                        <div className="w-10 h-6 bg-purple-500 rounded-md shadow-[0_0_15px_#a855f7] relative"><div className="absolute right-0 top-1/2 w-4 h-full bg-yellow-100/50 rounded-r-md -translate-y-1/2 blur-[1px]"></div></div>
+                                    </div>
+                                    {/* Bottom Lane Animation */}
+                                    <div className="absolute bottom-[35%] right-[-100px] flex gap-40 animate-[slideLeft_18s_linear_infinite] opacity-40">
+                                        <div className="w-10 h-6 bg-emerald-400 rounded-md shadow-[0_0_15px_#34d399] relative"><div className="absolute left-0 top-1/2 w-4 h-full bg-yellow-100/50 rounded-l-md -translate-y-1/2 blur-[1px]"></div></div>
+                                    </div>
+                                </div>
+
+                                <div className="min-w-max relative z-10 flex flex-col items-center">
+                                    {/* Entrance Indicator */}
+                                    <div className="text-center text-green-400 text-xs font-black tracking-[0.3em] uppercase mb-8 border border-green-500/30 bg-green-500/10 px-8 py-2 rounded-full shadow-[0_0_15px_rgba(34,197,94,0.15)] backdrop-blur-md">
+                                        ↓ {t.entrance || 'ENTRANCE'} ↓
+                                    </div>
+
+                                    {/* Parking Lot Structure */}
+                                    <div className="flex flex-col gap-24 relative">
+                                        
+                                        {/* Top Row */}
+                                        <div className="flex gap-4 border-b-2 border-slate-700 pb-2">
+                                            {slots.slice(0, Math.ceil(slots.length / 2)).map((slot, index) => {
+                                                const isEV = slot.slot_type === 'EV' || index === 2; // Mocking one EV slot for demo if none exists
+                                                const isReserved = slot.status === 'MAINTENANCE';
+                                                return (
+                                                    <div key={slot.id} className="relative group">
+                                                        <button 
+                                                            onClick={() => handleSlotSelect(slot)}
+                                                            disabled={slot.status !== 'AVAILABLE'}
+                                                            className={`
+                                                                relative h-36 w-24 rounded-t-xl border-x-4 border-t-4 flex flex-col items-center justify-start pt-4 transition-all duration-300 overflow-hidden
+                                                                ${slot.status === 'AVAILABLE' && selectedSlot !== slot.id && !isEV ? 'border-green-500/50 bg-green-950/20 hover:bg-green-900/40 hover:-translate-y-2 hover:shadow-[0_10px_20px_rgba(34,197,94,0.2)] cursor-pointer' : ''}
+                                                                ${slot.status === 'AVAILABLE' && selectedSlot !== slot.id && isEV ? 'border-cyan-500/50 bg-cyan-950/20 hover:bg-cyan-900/40 hover:-translate-y-2 hover:shadow-[0_10px_20px_rgba(6,182,212,0.3)] cursor-pointer' : ''}
+                                                                ${slot.status !== 'AVAILABLE' && !isReserved ? 'border-red-500/30 bg-red-950/30 cursor-not-allowed opacity-80' : ''}
+                                                                ${isReserved ? 'border-yellow-500/40 bg-yellow-950/30 cursor-not-allowed opacity-80' : ''}
+                                                                ${selectedSlot === slot.id ? 'border-blue-400 bg-blue-900/40 shadow-[0_0_30px_rgba(59,130,246,0.6)] ring-4 ring-blue-500/50 scale-105 z-20' : ''}
+                                                                after:content-[''] after:absolute after:bottom-0 after:w-full after:h-1 after:bg-white/10
+                                                            `}
+                                                        >
+                                                            {/* Slot Number Label */}
+                                                            <span className={`font-black text-xl z-10 ${slot.status === 'AVAILABLE' ? 'text-slate-300' : 'text-slate-500'}`}>
+                                                                {slot.slot_number}
+                                                            </span>
+                                                            
+                                                            {/* EV Indicator */}
+                                                            {isEV && <span className="absolute top-2 right-2 text-cyan-400 text-sm animate-pulse z-10">⚡</span>}
+
+                                                            {/* Cars for occupied/reserved */}
+                                                            {(slot.status !== 'AVAILABLE' || isReserved) && (
+                                                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none mt-4">
+                                                                    <img src="/car.png" alt="Car" className={`w-20 h-auto drop-shadow-2xl -rotate-90 ${isReserved ? 'sepia hue-rotate-30' : 'brightness-75'}`} />
+                                                                </div>
+                                                            )}
+
+                                                            {/* Selected state glow */}
+                                                            {selectedSlot === slot.id && (
+                                                                <div className="absolute inset-0 bg-blue-400/10 animate-pulse pointer-events-none"></div>
+                                                            )}
+                                                        </button>
+
+                                                        {/* Hover Tooltip */}
+                                                        <div className="absolute -top-16 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs py-2 px-4 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-30 border border-slate-700/50 backdrop-blur-md">
+                                                            <div className="font-bold text-sm text-blue-400 mb-1">{slot.slot_number} {isEV && '⚡'}</div>
+                                                            <div className="text-slate-300">₹{slot.price_per_hour}/hr • {slot.slot_type}</div>
+                                                            {slot.status !== 'AVAILABLE' && <div className="text-red-400 mt-1 font-semibold">{isReserved ? 'Reserved' : 'Occupied'}</div>}
+                                                        </div>
                                                     </div>
-                                                )}
-                                                {selectedSlot === slot.id && (
-                                                    <div className="absolute inset-0 flex items-center justify-center animate-float" style={{ animationDuration: '2s' }}>
-                                                        <img src="/car.png" alt="Car" className="w-20 h-auto drop-shadow-[0_0_15px_rgba(59,130,246,0.8)] -rotate-90 brightness-125" />
+                                                );
+                                            })}
+                                        </div>
+
+                                        {/* Central Driving Lane Divider */}
+                                        <div className="absolute top-1/2 -translate-y-1/2 w-full h-16 flex items-center justify-center pointer-events-none">
+                                            <div className="w-full h-0 border-t-4 border-dashed border-yellow-500/30"></div>
+                                            {/* Directional Arrows */}
+                                            <div className="absolute left-4 text-yellow-500/40 text-3xl font-black tracking-widest">→ →</div>
+                                            <div className="absolute right-4 text-yellow-500/40 text-3xl font-black tracking-widest">→ →</div>
+                                        </div>
+
+                                        {/* Bottom Row */}
+                                        <div className="flex gap-4 border-t-2 border-slate-700 pt-2">
+                                            {slots.slice(Math.ceil(slots.length / 2)).map((slot, index) => {
+                                                const isEV = slot.slot_type === 'EV' || index === 4; // Mocking one EV slot for demo if none exists
+                                                const isReserved = slot.status === 'MAINTENANCE';
+                                                return (
+                                                    <div key={slot.id} className="relative group">
+                                                        <button 
+                                                            onClick={() => handleSlotSelect(slot)}
+                                                            disabled={slot.status !== 'AVAILABLE'}
+                                                            className={`
+                                                                relative h-36 w-24 rounded-b-xl border-x-4 border-b-4 flex flex-col items-center justify-end pb-4 transition-all duration-300 overflow-hidden
+                                                                ${slot.status === 'AVAILABLE' && selectedSlot !== slot.id && !isEV ? 'border-green-500/50 bg-green-950/20 hover:bg-green-900/40 hover:translate-y-2 hover:shadow-[0_10px_20px_rgba(34,197,94,0.2)] cursor-pointer' : ''}
+                                                                ${slot.status === 'AVAILABLE' && selectedSlot !== slot.id && isEV ? 'border-cyan-500/50 bg-cyan-950/20 hover:bg-cyan-900/40 hover:translate-y-2 hover:shadow-[0_10px_20px_rgba(6,182,212,0.3)] cursor-pointer' : ''}
+                                                                ${slot.status !== 'AVAILABLE' && !isReserved ? 'border-red-500/30 bg-red-950/30 cursor-not-allowed opacity-80' : ''}
+                                                                ${isReserved ? 'border-yellow-500/40 bg-yellow-950/30 cursor-not-allowed opacity-80' : ''}
+                                                                ${selectedSlot === slot.id ? 'border-blue-400 bg-blue-900/40 shadow-[0_0_30px_rgba(59,130,246,0.6)] ring-4 ring-blue-500/50 scale-105 z-20' : ''}
+                                                                after:content-[''] after:absolute after:top-0 after:w-full after:h-1 after:bg-white/10
+                                                            `}
+                                                        >
+                                                            {/* Slot Number Label */}
+                                                            <span className={`font-black text-xl z-10 ${slot.status === 'AVAILABLE' ? 'text-slate-300' : 'text-slate-500'}`}>
+                                                                {slot.slot_number}
+                                                            </span>
+                                                            
+                                                            {/* EV Indicator */}
+                                                            {isEV && <span className="absolute bottom-2 right-2 text-cyan-400 text-sm animate-pulse z-10">⚡</span>}
+
+                                                            {/* Cars for occupied/reserved */}
+                                                            {(slot.status !== 'AVAILABLE' || isReserved) && (
+                                                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none mb-4">
+                                                                    <img src="/car.png" alt="Car" className={`w-20 h-auto drop-shadow-2xl rotate-90 ${isReserved ? 'sepia hue-rotate-30' : 'brightness-75'}`} />
+                                                                </div>
+                                                            )}
+
+                                                            {/* Selected state glow */}
+                                                            {selectedSlot === slot.id && (
+                                                                <div className="absolute inset-0 bg-blue-400/10 animate-pulse pointer-events-none"></div>
+                                                            )}
+                                                        </button>
+
+                                                        {/* Hover Tooltip */}
+                                                        <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs py-2 px-4 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-30 border border-slate-700/50 backdrop-blur-md">
+                                                            <div className="font-bold text-sm text-blue-400 mb-1">{slot.slot_number} {isEV && '⚡'}</div>
+                                                            <div className="text-slate-300">₹{slot.price_per_hour}/hr • {slot.slot_type}</div>
+                                                            {slot.status !== 'AVAILABLE' && <div className="text-red-400 mt-1 font-semibold">{isReserved ? 'Reserved' : 'Occupied'}</div>}
+                                                        </div>
                                                     </div>
-                                                )}
-                                                
-                                                {slot.status === 'AVAILABLE' && selectedSlot !== slot.id && (
-                                                    <div className="absolute bottom-2 text-[10px] font-bold text-green-400 bg-green-400/10 px-2 py-0.5 rounded-full uppercase tracking-wider border border-green-400/20">{t.free}</div>
-                                                )}
-                                                {slot.status !== 'AVAILABLE' && (
-                                                    <div className="absolute bottom-2 text-[10px] font-bold text-red-500 bg-red-500/10 px-2 py-0.5 rounded-full uppercase tracking-wider border border-red-500/20">{t.full}</div>
-                                                )}
-                                            </button>
-                                        ))}
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    {/* Exit Indicator */}
+                                    <div className="text-center text-slate-400 text-xs font-black tracking-[0.3em] uppercase mt-8 border border-slate-700 bg-slate-800/50 px-8 py-2 rounded-full shadow-inner backdrop-blur-md">
+                                        ↑ EXIT ↑
                                     </div>
                                 </div>
                             </div>
