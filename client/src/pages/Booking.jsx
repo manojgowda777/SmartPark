@@ -343,12 +343,6 @@ const Booking = () => {
                     {step === 4 && (
                         <div className="flex flex-col items-center animate-in zoom-in duration-700 w-full">
                             
-                            {/* Auto-playing Audio Element for iOS/Browser compatibility */}
-                            <audio autoPlay>
-                                <source src="https://www.myinstants.com/media/sounds/initial-d-deja-vu.mp3" type="audio/mpeg" />
-                                <source src="https://actions.google.com/sounds/v1/transportation/tires_squeal_and_skid.ogg" type="audio/ogg" />
-                            </audio>
-
                             {/* Holographic Ticket Container */}
                             <div className="relative w-full max-w-sm mx-auto group perspective-1000">
                                 {/* Holographic Glow */}
