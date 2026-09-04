@@ -341,20 +341,49 @@ const Booking = () => {
 
                     {/* Step 4: Success Holographic Ticket */}
                     {step === 4 && (
-                        <div className="flex flex-col items-center animate-in zoom-in duration-700">
+                        <div className="flex flex-col items-center animate-in zoom-in duration-700 w-full">
                             {/* Holographic Ticket Container */}
                             <div className="relative w-full max-w-sm mx-auto group perspective-1000">
                                 {/* Holographic Glow */}
-                                <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 rounded-3xl blur opacity-70 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-gradient-x"></div>
+                                <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 rounded-3xl blur opacity-70 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-gradient-x"></div>
                                 
                                 {/* Ticket Body */}
-                                <div className="relative bg-white/90 backdrop-blur-xl border border-white rounded-3xl overflow-hidden shadow-2xl transition-transform duration-500 transform group-hover:-translate-y-2 group-hover:rotate-x-12">
-                                    {/* Ticket Header */}
-                                    <div className="bg-slate-900 text-white p-6 text-center relative overflow-hidden">
-                                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-transparent"></div>
-                                        <CheckCircle size={48} className="mx-auto text-green-400 mb-2 relative z-10 animate-bounce" />
-                                        <h2 className="text-2xl font-black relative z-10 tracking-wider uppercase">Pass Confirmed</h2>
+                                <div className="relative bg-white/95 backdrop-blur-xl border border-white rounded-3xl overflow-hidden shadow-2xl transition-transform duration-500 transform group-hover:-translate-y-2">
+                                    
+                                    {/* Animated Success Header */}
+                                    <div className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-8 text-center relative overflow-hidden flex flex-col items-center">
+                                        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] [background-size:16px_16px]"></div>
+                                        
+                                        {/* Animated Checkmark Circle */}
+                                        <div className="relative w-20 h-20 mb-6">
+                                            {/* Outer pulsing ring */}
+                                            <div className="absolute inset-0 bg-green-400 rounded-full animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] opacity-20"></div>
+                                            {/* Inner white circle popping in */}
+                                            <div className="absolute inset-0 bg-white rounded-full flex items-center justify-center scale-0 shadow-lg shadow-green-900/20 animate-[popIn_0.5s_cubic-bezier(0.175,0.885,0.32,1.275)_forwards]">
+                                                {/* Drawing checkmark */}
+                                                <svg className="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" className="animate-[drawCheck_0.5s_ease-out_0.3s_forwards] [stroke-dasharray:50] [stroke-dashoffset:50]" />
+                                                </svg>
+                                            </div>
+                                        </div>
+
+                                        <h2 className="text-2xl font-black relative z-10 tracking-widest uppercase drop-shadow-md animate-[slideUp_0.5s_ease-out_0.4s_both]">Payment Successful</h2>
+                                        <p className="text-blue-100 font-medium text-sm mt-1 animate-[slideUp_0.5s_ease-out_0.5s_both]">Spot is secured and locked.</p>
                                     </div>
+
+                                    <style>{`
+                                        @keyframes popIn {
+                                            0% { transform: scale(0); opacity: 0; }
+                                            100% { transform: scale(1); opacity: 1; }
+                                        }
+                                        @keyframes drawCheck {
+                                            to { stroke-dashoffset: 0; }
+                                        }
+                                        @keyframes slideUp {
+                                            from { transform: translateY(20px); opacity: 0; }
+                                            to { transform: translateY(0); opacity: 1; }
+                                        }
+                                    `}</style>
                                     
                                     {/* Perforation Line */}
                                     <div className="flex justify-between items-center -my-3 relative z-20">
