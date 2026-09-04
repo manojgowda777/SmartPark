@@ -263,24 +263,32 @@ const Booking = () => {
                                             <div className="flex-1 h-px bg-purple-200"></div>
                                         </div>
                                         
-                                        <div className="grid grid-cols-3 gap-3">
+                                        <div className="grid grid-cols-3 gap-3 w-full">
+                                            {/* Google Pay Button */}
                                             <a 
                                                 href={`tez://upi/pay?pa=smartpark@upi&pn=SmartPark&am=${bookingData.amount}&cu=INR`}
-                                                className="flex flex-col items-center justify-center gap-2 p-3 bg-white border-2 border-slate-100 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all"
+                                                className="relative overflow-hidden flex items-center justify-center py-3 px-1 bg-white border border-slate-200 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] hover:border-slate-300 hover:-translate-y-0.5 transition-all duration-300 group"
                                             >
-                                                <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-xs font-bold text-slate-800">GPay</div>
+                                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-red-500 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                <span className="font-black text-slate-800 text-[15px] sm:text-lg tracking-tight"><span className="text-blue-600">G</span>Pay</span>
                                             </a>
+                                            
+                                            {/* PhonePe Button */}
                                             <a 
                                                 href={`phonepe://pay?pa=smartpark@upi&pn=SmartPark&am=${bookingData.amount}&cu=INR`}
-                                                className="flex flex-col items-center justify-center gap-2 p-3 bg-white border-2 border-slate-100 rounded-xl hover:border-purple-500 hover:shadow-lg transition-all"
+                                                className="relative overflow-hidden flex items-center justify-center py-3 px-1 bg-white border border-slate-200 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_20px_rgba(107,33,168,0.15)] hover:border-purple-300 hover:-translate-y-0.5 transition-all duration-300 group"
                                             >
-                                                <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-xs font-bold text-purple-700">Pe</div>
+                                                <div className="absolute top-0 left-0 w-full h-1 bg-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                <span className="font-black text-purple-700 text-[15px] sm:text-lg tracking-tight">Phone<span className="text-purple-500">Pe</span></span>
                                             </a>
+                                            
+                                            {/* Paytm Button */}
                                             <a 
                                                 href={`paytmmp://pay?pa=smartpark@upi&pn=SmartPark&am=${bookingData.amount}&cu=INR`}
-                                                className="flex flex-col items-center justify-center gap-2 p-3 bg-white border-2 border-slate-100 rounded-xl hover:border-sky-500 hover:shadow-lg transition-all"
+                                                className="relative overflow-hidden flex items-center justify-center py-3 px-1 bg-white border border-slate-200 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_20px_rgba(2,132,199,0.15)] hover:border-sky-300 hover:-translate-y-0.5 transition-all duration-300 group"
                                             >
-                                                <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-xs font-bold text-sky-600">Paytm</div>
+                                                <div className="absolute top-0 left-0 w-full h-1 bg-sky-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                <span className="font-black text-slate-800 text-[15px] sm:text-lg tracking-tight">Pay<span className="text-sky-500">tm</span></span>
                                             </a>
                                         </div>
                                     </div>
