@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, LayoutGrid, IndianRupee, Activity } from 'lucide-react';
 import api from '../services/api';
 
@@ -43,25 +43,25 @@ const AdminDashboard = () => {
             </div>
 
             <div className="flex-1">
-                <h1 className="text-3xl font-bold text-[#0B1533] mb-8">System Overview</h1>
+                <h1 className="text-3xl font-bold text-slate-900 mb-8">System Overview</h1>
                 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                         <div className="flex justify-between items-start mb-4">
                             <div>
                                 <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Total Users</p>
-                                <p className="text-3xl font-black text-[#0B1533]">{stats.total_drivers + stats.total_operators}</p>
+                                <p className="text-3xl font-black text-slate-900">{stats.total_drivers + stats.total_operators}</p>
                             </div>
                             <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center"><Users size={20}/></div>
                         </div>
-                        <p className="text-sm text-slate-500">{stats.total_drivers} Drivers â€¢ {stats.total_operators} Operators</p>
+                        <p className="text-sm text-slate-500">{stats.total_drivers} Drivers • {stats.total_operators} Operators</p>
                     </div>
 
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                         <div className="flex justify-between items-start mb-4">
                             <div>
                                 <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Locations</p>
-                                <p className="text-3xl font-black text-[#0B1533]">{stats.total_locations}</p>
+                                <p className="text-3xl font-black text-slate-900">{stats.total_locations}</p>
                             </div>
                             <div className="w-10 h-10 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center"><LayoutGrid size={20}/></div>
                         </div>
@@ -72,7 +72,7 @@ const AdminDashboard = () => {
                         <div className="flex justify-between items-start mb-4">
                             <div>
                                 <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Bookings</p>
-                                <p className="text-3xl font-black text-[#0B1533]">{stats.total_bookings}</p>
+                                <p className="text-3xl font-black text-slate-900">{stats.total_bookings}</p>
                             </div>
                             <div className="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center"><Activity size={20}/></div>
                         </div>
@@ -83,7 +83,7 @@ const AdminDashboard = () => {
                         <div className="flex justify-between items-start mb-4">
                             <div>
                                 <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Total Revenue</p>
-                                <p className="text-3xl font-black text-[#0B1533]">â‚¹{stats.total_revenue}</p>
+                                <p className="text-3xl font-black text-slate-900">₹{stats.total_revenue}</p>
                             </div>
                             <div className="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center"><IndianRupee size={20}/></div>
                         </div>
