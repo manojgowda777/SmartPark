@@ -54,12 +54,6 @@ const Booking = () => {
             await api.post('/bookings', bookingData);
             setSuccess(true);
             setStep(4);
-            
-            // Play drift/skid sound on success
-            const audio = new Audio('https://actions.google.com/sounds/v1/transportation/tires_squeal_and_skid.ogg');
-            audio.volume = 0.6;
-            audio.play().catch(err => console.log('Audio playback prevented by browser:', err));
-            
         } catch (err) {
             setError(err.response?.data?.message || 'Payment failed. Please try again.');
         } finally {
@@ -348,6 +342,13 @@ const Booking = () => {
                     {/* Step 4: Success Holographic Ticket */}
                     {step === 4 && (
                         <div className="flex flex-col items-center animate-in zoom-in duration-700 w-full">
+                            
+                            {/* Auto-playing Audio Element for iOS/Browser compatibility */}
+                            <audio autoPlay>
+                                <source src="https://www.myinstants.com/media/sounds/initial-d-deja-vu.mp3" type="audio/mpeg" />
+                                <source src="https://actions.google.com/sounds/v1/transportation/tires_squeal_and_skid.ogg" type="audio/ogg" />
+                            </audio>
+
                             {/* Holographic Ticket Container */}
                             <div className="relative w-full max-w-sm mx-auto group perspective-1000">
                                 {/* Holographic Glow */}
