@@ -255,6 +255,36 @@ const Booking = () => {
                                         <div className="absolute bottom-2 right-2 w-8 h-8 border-b-4 border-r-4 border-purple-500 rounded-br-xl z-20"></div>
                                     </div>
 
+                                    {/* Direct App Payment Buttons */}
+                                    <div className="w-full max-w-sm mb-8 relative z-10">
+                                        <div className="flex items-center gap-4 mb-4">
+                                            <div className="flex-1 h-px bg-purple-200"></div>
+                                            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Or Pay With App</span>
+                                            <div className="flex-1 h-px bg-purple-200"></div>
+                                        </div>
+                                        
+                                        <div className="grid grid-cols-3 gap-3">
+                                            <a 
+                                                href={`tez://upi/pay?pa=smartpark@upi&pn=SmartPark&am=${bookingData.amount}&cu=INR`}
+                                                className="flex flex-col items-center justify-center gap-2 p-3 bg-white border-2 border-slate-100 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all"
+                                            >
+                                                <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-xs font-bold text-slate-800">GPay</div>
+                                            </a>
+                                            <a 
+                                                href={`phonepe://pay?pa=smartpark@upi&pn=SmartPark&am=${bookingData.amount}&cu=INR`}
+                                                className="flex flex-col items-center justify-center gap-2 p-3 bg-white border-2 border-slate-100 rounded-xl hover:border-purple-500 hover:shadow-lg transition-all"
+                                            >
+                                                <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-xs font-bold text-purple-700">Pe</div>
+                                            </a>
+                                            <a 
+                                                href={`paytmmp://pay?pa=smartpark@upi&pn=SmartPark&am=${bookingData.amount}&cu=INR`}
+                                                className="flex flex-col items-center justify-center gap-2 p-3 bg-white border-2 border-slate-100 rounded-xl hover:border-sky-500 hover:shadow-lg transition-all"
+                                            >
+                                                <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-xs font-bold text-sky-600">Paytm</div>
+                                            </a>
+                                        </div>
+                                    </div>
+
                                     <div className="flex items-center gap-3 text-slate-500 font-bold bg-white/50 backdrop-blur-sm px-6 py-3 rounded-full border border-purple-100 relative z-10">
                                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#22c55e]"></div>
                                         Awaiting Payment Confirmation...
