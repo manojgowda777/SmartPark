@@ -357,18 +357,18 @@ const Booking = () => {
                                         {/* Animated Checkmark Circle */}
                                         <div className="relative w-20 h-20 mb-6">
                                             {/* Outer pulsing ring */}
-                                            <div className="absolute inset-0 bg-green-400 rounded-full animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] opacity-20"></div>
+                                            <div className="absolute inset-0 bg-green-400 rounded-full opacity-20" style={{ animation: 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite' }}></div>
                                             {/* Inner white circle popping in */}
-                                            <div className="absolute inset-0 bg-white rounded-full flex items-center justify-center scale-0 shadow-lg shadow-green-900/20 animate-[popIn_0.5s_cubic-bezier(0.175,0.885,0.32,1.275)_forwards]">
+                                            <div className="absolute inset-0 bg-white rounded-full flex items-center justify-center shadow-lg shadow-green-900/20" style={{ transform: 'scale(0)', opacity: 0, animation: 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}>
                                                 {/* Drawing checkmark */}
-                                                <svg className="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" className="animate-[drawCheck_0.5s_ease-out_0.3s_forwards] [stroke-dasharray:50] [stroke-dashoffset:50]" />
+                                                <svg className="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" style={{ strokeDasharray: 50, strokeDashoffset: 50, animation: 'drawCheck 0.5s ease-out 0.3s forwards' }} />
                                                 </svg>
                                             </div>
                                         </div>
 
-                                        <h2 className="text-2xl font-black relative z-10 tracking-widest uppercase drop-shadow-md animate-[slideUp_0.5s_ease-out_0.4s_both]">Payment Successful</h2>
-                                        <p className="text-blue-100 font-medium text-sm mt-1 animate-[slideUp_0.5s_ease-out_0.5s_both]">Spot is secured and locked.</p>
+                                        <h2 className="text-2xl font-black relative z-10 tracking-widest uppercase drop-shadow-md" style={{ opacity: 0, animation: 'slideUp 0.5s ease-out 0.4s both' }}>Payment Successful</h2>
+                                        <p className="text-blue-100 font-medium text-sm mt-1" style={{ opacity: 0, animation: 'slideUp 0.5s ease-out 0.5s both' }}>Spot is secured and locked.</p>
                                     </div>
 
                                     <style>{`
