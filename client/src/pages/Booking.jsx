@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckCircle, CreditCard, Car, Calendar as CalendarIcon, MapPin } from 'lucide-react';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
@@ -8,6 +8,7 @@ import { LanguageContext } from '../context/LanguageContext';
 const Booking = () => {
     const { slotId } = useParams();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const { user } = useContext(AuthContext);
     const { t: getT } = useContext(LanguageContext);
     const t = getT('book');
@@ -19,14 +20,18 @@ const Booking = () => {
     const [success, setSuccess] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState('upi');
     
+    const initialDate = searchParams.get('date') || new Date().toISOString().split('T')[0];
+    const initialTime = searchParams.get('time') || '10:00';
+    const initialDuration = parseInt(searchParams.get('duration') || '2');
+
     // In a real app, we'd fetch slot details. For simplicity here, we'll mock the details based on URL 
     // or fetch from an endpoint. Let's assume price is ₹40.
     const [bookingData, setBookingData] = useState({
         vehicle_number: '',
-        date: new Date().toISOString().split('T')[0],
-        start_time: '10:00',
-        duration: 2,
-        amount: 80, // 40 * 2
+        date: initialDate,
+        start_time: initialTime,
+        duration: initialDuration,
+        amount: initialDuration * 40,
         parking_location_id: 1, // hardcoded for this MVP simplicity, should fetch slot info
         slot_id: parseInt(slotId)
     });

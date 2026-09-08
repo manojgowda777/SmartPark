@@ -12,13 +12,18 @@ const ParkingDetails = () => {
     const [slots, setSlots] = useState([]);
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [loading, setLoading] = useState(true);
+    
+    // Real-time booking filter states
+    const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+    const [time, setTime] = useState('10:00');
+    const [duration, setDuration] = useState('2');
 
     useEffect(() => {
         const fetchDetails = async () => {
             try {
                 const [locRes, slotRes] = await Promise.all([
                     api.get(`/parking/${id}`),
-                    api.get(`/parking/${id}/slots`)
+                    api.get(`/parking/${id}/slots?date=${date}&time=${time}&duration=${duration}`)
                 ]);
                 setLocation(locRes.data);
                 setSlots(slotRes.data);
@@ -29,30 +34,9 @@ const ParkingDetails = () => {
             }
         };
         fetchDetails();
-    }, [id]);
+    }, [id, date, time, duration]);
 
-    // Live Ghost Occupancy Simulator
-    useEffect(() => {
-        if (loading || slots.length === 0) return;
-        
-        const interval = setInterval(() => {
-            setSlots(currentSlots => {
-                const newSlots = [...currentSlots];
-                // Pick a random slot to toggle
-                const randomIndex = Math.floor(Math.random() * newSlots.length);
-                const slot = newSlots[randomIndex];
-                
-                // Don't toggle the currently selected slot
-                if (slot.id !== selectedSlot) {
-                    slot.status = slot.status === 'AVAILABLE' ? 'OCCUPIED' : 'AVAILABLE';
-                }
-                
-                return newSlots;
-            });
-        }, 3000); // Random flip every 3 seconds
 
-        return () => clearInterval(interval);
-    }, [loading, slots.length, selectedSlot]);
 
     const handleSlotSelect = (slot) => {
         if (slot.status === 'AVAILABLE') {
@@ -105,6 +89,34 @@ const ParkingDetails = () => {
                                             <p className="text-sm font-bold text-slate-900">{availableCount} / {slots.length}</p>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Real-time Availability Filter */}
+                        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+                            <h3 className="text-lg font-black text-slate-900 mb-4 flex items-center gap-2">
+                                <Clock size={20} className="text-blue-500" />
+                                Check Real-Time Availability
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Date</label>
+                                    <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-slate-900 focus:outline-none focus:border-blue-500 transition-colors" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Start Time</label>
+                                    <input type="time" value={time} onChange={e => setTime(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-slate-900 focus:outline-none focus:border-blue-500 transition-colors" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Duration (Hours)</label>
+                                    <select value={duration} onChange={e => setDuration(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-slate-900 focus:outline-none focus:border-blue-500 transition-colors">
+                                        <option value="1">1 Hour</option>
+                                        <option value="2">2 Hours</option>
+                                        <option value="4">4 Hours</option>
+                                        <option value="8">8 Hours</option>
+                                        <option value="24">24 Hours</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -329,7 +341,7 @@ const ParkingDetails = () => {
                                 </div>
                             </div>
 
-                            <Link to={`/book/${selectedSlot}`} className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white transition-colors ${selectedSlot ? 'bg-blue-600 hover:bg-blue-700' : 'bg-slate-300 cursor-not-allowed pointer-events-none'}`}>
+                            <Link to={`/book/${selectedSlot}?date=${date}&time=${time}&duration=${duration}`} className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white transition-colors ${selectedSlot ? 'bg-blue-600 hover:bg-blue-700' : 'bg-slate-300 cursor-not-allowed pointer-events-none'}`}>
                                 {t.continue}
                             </Link>
                         </div>
