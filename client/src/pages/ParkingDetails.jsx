@@ -341,7 +341,7 @@ const ParkingDetails = () => {
                                 </div>
                             </div>
 
-                            <Link to={`/book/${selectedSlot}?date=${date}&time=${time}&duration=${duration}`} className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white transition-colors ${selectedSlot ? 'bg-blue-600 hover:bg-blue-700' : 'bg-slate-300 cursor-not-allowed pointer-events-none'}`}>
+                            <Link to={`/book/${selectedSlot}?date=${date}&time=${time}&duration=${duration}&locationId=${id}`} className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white transition-colors ${selectedSlot ? 'bg-blue-600 hover:bg-blue-700' : 'bg-slate-300 cursor-not-allowed pointer-events-none'}`}>
                                 {t.continue}
                             </Link>
                         </div>

@@ -23,6 +23,7 @@ const Booking = () => {
     const initialDate = searchParams.get('date') || new Date().toISOString().split('T')[0];
     const initialTime = searchParams.get('time') || '10:00';
     const initialDuration = parseInt(searchParams.get('duration') || '2');
+    const locationId = parseInt(searchParams.get('locationId') || '1');
 
     // In a real app, we'd fetch slot details. For simplicity here, we'll mock the details based on URL 
     // or fetch from an endpoint. Let's assume price is ₹40.
@@ -32,7 +33,7 @@ const Booking = () => {
         start_time: initialTime,
         duration: initialDuration,
         amount: initialDuration * 40,
-        parking_location_id: 1, // hardcoded for this MVP simplicity, should fetch slot info
+        parking_location_id: locationId,
         slot_id: parseInt(slotId)
     });
 
