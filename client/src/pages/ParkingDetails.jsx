@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, Clock, Star, ArrowLeft } from 'lucide-react';
+import { io } from 'socket.io-client';
 import api from '../services/api';
 import { LanguageContext } from '../context/LanguageContext';
+
+// Connect to the backend socket server
+const socket = io(import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : `http://${window.location.hostname}:5000`);
 
 const ParkingDetails = () => {
     const { id } = useParams();
@@ -18,23 +22,46 @@ const ParkingDetails = () => {
     const [time, setTime] = useState('10:00');
     const [duration, setDuration] = useState('2');
 
-    useEffect(() => {
-        const fetchDetails = async () => {
-            try {
-                const [locRes, slotRes] = await Promise.all([
-                    api.get(`/parking/${id}`),
-                    api.get(`/parking/${id}/slots?date=${date}&time=${time}&duration=${duration}`)
-                ]);
-                setLocation(locRes.data);
-                setSlots(slotRes.data);
-            } catch (error) {
-                console.error("Failed to fetch parking details", error);
-            } finally {
-                setLoading(false);
+    const fetchDetails = async () => {
+        try {
+            const [locRes, slotRes] = await Promise.all([
+                api.get(`/parking/${id}`),
+                api.get(`/parking/${id}/slots?date=${date}&time=${time}&duration=${duration}`)
+            ]);
+            setLocation(locRes.data);
+            setSlots(slotRes.data);
+            
+            // If the currently selected slot was just booked by someone else, deselect it!
+            if (selectedSlot) {
+                const updatedSelected = slotRes.data.find(s => s.id === selectedSlot);
+                if (updatedSelected && updatedSelected.status !== 'AVAILABLE') {
+                    setSelectedSlot(null);
+                }
             }
-        };
+        } catch (error) {
+            console.error("Failed to fetch parking details", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchDetails();
     }, [id, date, time, duration]);
+
+    // Socket.IO Real-time updates listener
+    useEffect(() => {
+        socket.on('booking_updated', (data) => {
+            // If a booking happened at the location we are currently viewing, re-fetch slots!
+            if (parseInt(data.parking_location_id) === parseInt(id)) {
+                fetchDetails();
+            }
+        });
+
+        return () => {
+            socket.off('booking_updated');
+        };
+    }, [id, date, time, duration, selectedSlot]);
 
 
 

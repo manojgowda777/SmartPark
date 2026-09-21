@@ -28,14 +28,31 @@ exports.createBooking = async (req, res) => {
         // 2. Calculate end time based on start_time and duration (simple hours addition)
         const startHour = parseInt(start_time.split(':')[0]);
         const endHour = (startHour + parseInt(duration)) % 24;
+        const startTimeStr = `${startHour.toString().padStart(2, '0')}:00:00`;
         const end_time = `${endHour.toString().padStart(2, '0')}:00:00`;
+
+        // DOUBLE BOOKING PROTECTION: Strictly check for overlapping confirmed bookings before inserting
+        const overlapQuery = `
+            SELECT id FROM bookings 
+            WHERE parking_location_id = ? 
+            AND slot_id = ?
+            AND booking_date = ? 
+            AND booking_status = 'CONFIRMED'
+            AND start_time < ? 
+            AND end_time > ?
+        `;
+        const [overlapping] = await db.query(overlapQuery, [parking_location_id, slot_id, date, end_time, startTimeStr]);
+        
+        if (overlapping.length > 0) {
+            return res.status(409).json({ message: 'This slot was just booked by another user for this exact time. Please select another slot.' });
+        }
 
         // 3. Create the booking record
         const [bookingResult] = await db.query(
             `INSERT INTO bookings 
             (user_id, vehicle_id, parking_location_id, slot_id, booking_date, start_time, end_time, duration, amount, payment_status, booking_status) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', 'PENDING')`,
-            [user_id, vehicle_id, parking_location_id, slot_id, date, start_time, end_time, duration, amount]
+            [user_id, vehicle_id, parking_location_id, slot_id, date, startTimeStr, end_time, duration, amount]
         );
         
         const booking_id = bookingResult.insertId;
@@ -49,7 +66,15 @@ exports.createBooking = async (req, res) => {
 
         // 5. Update booking and slot status
         await db.query(`UPDATE bookings SET payment_status = 'PAID', booking_status = 'CONFIRMED' WHERE id = ?`, [booking_id]);
-        await db.query(`UPDATE parking_slots SET status = 'BOOKED' WHERE id = ?`, [slot_id]);
+        
+        // We do NOT permanently lock the slot_status to 'BOOKED' anymore, because availability is strictly dynamic!
+        // But for fallback/legacy logic, we can leave the base status alone or set it. Better to leave it alone so it can be dynamically calculated.
+        
+        // REAL-TIME UPDATE: Notify all connected clients that a booking was made at this location!
+        const io = req.app.get('io');
+        if (io) {
+            io.emit('booking_updated', { parking_location_id });
+        }
 
         // 6. Send Email Confirmation via HTTP (Brevo API to bypass Render Firewall and send to anyone)
         try {
