@@ -234,10 +234,10 @@ exports.createRazorpayOrder = async (req, res) => {
 
         const startHour = parseInt(start_time.split(':')[0]);
         const endHour = (startHour + parseInt(duration)) % 24;
-        const startTimeStr = ${startHour.toString().padStart(2, '0')}:00:00;
-        const end_time = ${endHour.toString().padStart(2, '0')}:00:00;
+        const startTimeStr = `${startHour.toString().padStart(2, '0')}:00:00`;
+        const end_time = `${endHour.toString().padStart(2, '0')}:00:00`;
 
-        const overlapQuery = \
+        const overlapQuery = `
             SELECT id FROM bookings 
             WHERE parking_location_id = ? 
             AND slot_id = ?
@@ -245,7 +245,7 @@ exports.createRazorpayOrder = async (req, res) => {
             AND booking_status = 'CONFIRMED'
             AND start_time < ? 
             AND end_time > ?
-        \;
+        `;
         const [overlapping] = await db.query(overlapQuery, [parking_location_id, slot_id, date, end_time, startTimeStr]);
         
         if (overlapping.length > 0) {
@@ -262,7 +262,7 @@ exports.createRazorpayOrder = async (req, res) => {
         const options = {
             amount: amount * 100,
             currency: "INR",
-            receipt: \eceipt_order_\\
+            receipt: `receipt_order_${Date.now()}`
         };
 
         const order = await instance.orders.create(options);
@@ -294,10 +294,10 @@ exports.verifyPaymentAndBook = async (req, res) => {
 
         const startHour = parseInt(start_time.split(':')[0]);
         const endHour = (startHour + parseInt(duration)) % 24;
-        const startTimeStr = ${startHour.toString().padStart(2, '0')}:00:00;
-        const end_time = ${endHour.toString().padStart(2, '0')}:00:00;
+        const startTimeStr = `${startHour.toString().padStart(2, '0')}:00:00`;
+        const end_time = `${endHour.toString().padStart(2, '0')}:00:00`;
 
-        const overlapQuery = \
+        const overlapQuery = `
             SELECT id FROM bookings 
             WHERE parking_location_id = ? 
             AND slot_id = ?
@@ -305,7 +305,7 @@ exports.verifyPaymentAndBook = async (req, res) => {
             AND booking_status = 'CONFIRMED'
             AND start_time < ? 
             AND end_time > ?
-        \;
+        `;
         const [overlapping] = await db.query(overlapQuery, [parking_location_id, slot_id, date, end_time, startTimeStr]);
         
         if (overlapping.length > 0) {
@@ -326,17 +326,17 @@ exports.verifyPaymentAndBook = async (req, res) => {
         }
 
         const [bookingResult] = await db.query(
-            \INSERT INTO bookings 
+            `INSERT INTO bookings 
             (user_id, vehicle_id, parking_location_id, slot_id, booking_date, start_time, end_time, duration, amount, payment_status, booking_status) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'PAID', 'CONFIRMED')\,
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'PAID', 'CONFIRMED')`,
             [user_id, vehicle_id, parking_location_id, slot_id, date, startTimeStr, end_time, duration, amount]
         );
         
         const booking_id = bookingResult.insertId;
 
         await db.query(
-            \INSERT INTO payments (booking_id, user_id, amount, payment_method, transaction_id, payment_status, paid_at) 
-            VALUES (?, ?, ?, 'RAZORPAY', ?, 'SUCCESS', NOW())\,
+            `INSERT INTO payments (booking_id, user_id, amount, payment_method, transaction_id, payment_status, paid_at) 
+            VALUES (?, ?, ?, 'RAZORPAY', ?, 'SUCCESS', NOW())`,
             [booking_id, user_id, amount, razorpay_payment_id]
         );
 
