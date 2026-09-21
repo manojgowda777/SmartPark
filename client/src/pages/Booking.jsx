@@ -5,6 +5,16 @@ import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { LanguageContext } from '../context/LanguageContext';
 
+const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.onload = () => resolve(true);
+        script.onerror = () => resolve(false);
+        document.body.appendChild(script);
+    });
+};
+
 const Booking = () => {
     const { slotId } = useParams();
     const navigate = useNavigate();
@@ -53,16 +63,69 @@ const Booking = () => {
     };
 
     const handlePayment = async () => {
+        if (!bookingData.vehicle_number) {
+            setError('Please enter a vehicle number.');
+            return;
+        }
+
         setLoading(true);
         setError('');
         
         try {
-            await api.post('/bookings', bookingData);
-            setSuccess(true);
-            setStep(4);
+            const isLoaded = await loadRazorpayScript();
+            if (!isLoaded) {
+                setError('Razorpay SDK failed to load. Are you online?');
+                setLoading(false);
+                return;
+            }
+
+            // Create Order on Backend
+            const { data: orderData } = await api.post('/bookings/create-order', bookingData);
+            
+            const options = {
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID, // Use env variable in prod
+                amount: orderData.amount * 100,
+                currency: orderData.currency,
+                name: 'SmartPark',
+                description: 'Parking Slot Booking',
+                order_id: orderData.order_id,
+                handler: async function (response) {
+                    try {
+                        setLoading(true); // Keep loading while verifying
+                        await api.post('/bookings/verify-payment', {
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            bookingData
+                        });
+                        setSuccess(true);
+                        setStep(4);
+                    } catch (verifyError) {
+                        setError(verifyError.response?.data?.message || 'Payment verification failed.');
+                        setStep(2); // Keep them on the payment view to retry if needed
+                    } finally {
+                        setLoading(false);
+                    }
+                },
+                prefill: {
+                    name: user?.name || '',
+                    email: user?.email || '',
+                    contact: ''
+                },
+                theme: {
+                    color: '#2563eb'
+                }
+            };
+            
+            const rzp = new window.Razorpay(options);
+            rzp.on('payment.failed', function (response){
+                setError(response.error.description || 'Payment failed.');
+                setLoading(false);
+            });
+            rzp.open();
+
         } catch (err) {
-            setError(err.response?.data?.message || 'Payment failed. Please try again.');
-        } finally {
+            setError(err.response?.data?.message || 'Failed to initiate payment.');
             setLoading(false);
         }
     };

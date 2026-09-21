@@ -221,3 +221,133 @@ exports.testResend = async (req, res) => {
     }
 };
 
+const Razorpay = require('razorpay');
+const crypto = require('crypto');
+
+exports.createRazorpayOrder = async (req, res) => {
+    try {
+        const { parking_location_id, slot_id, date, start_time, duration } = req.body;
+        
+        if (!parking_location_id || !slot_id || !date || !start_time || !duration) {
+            return res.status(400).json({ message: 'Missing booking details.' });
+        }
+
+        const startHour = parseInt(start_time.split(':')[0]);
+        const endHour = (startHour + parseInt(duration)) % 24;
+        const startTimeStr = ${startHour.toString().padStart(2, '0')}:00:00;
+        const end_time = ${endHour.toString().padStart(2, '0')}:00:00;
+
+        const overlapQuery = \
+            SELECT id FROM bookings 
+            WHERE parking_location_id = ? 
+            AND slot_id = ?
+            AND booking_date = ? 
+            AND booking_status = 'CONFIRMED'
+            AND start_time < ? 
+            AND end_time > ?
+        \;
+        const [overlapping] = await db.query(overlapQuery, [parking_location_id, slot_id, date, end_time, startTimeStr]);
+        
+        if (overlapping.length > 0) {
+            return res.status(409).json({ message: 'This slot was just booked by another user for this exact time. Please select another slot.' });
+        }
+
+        const amount = parseInt(duration) * 40;
+
+        const instance = new Razorpay({
+            key_id: process.env.RAZORPAY_KEY_ID,
+            key_secret: process.env.RAZORPAY_KEY_SECRET,
+        });
+
+        const options = {
+            amount: amount * 100,
+            currency: "INR",
+            receipt: \eceipt_order_\\
+        };
+
+        const order = await instance.orders.create(options);
+        
+        res.json({
+            order_id: order.id,
+            amount: amount,
+            currency: order.currency
+        });
+    } catch (error) {
+        console.error("Razorpay Order Error:", error);
+        res.status(500).json({ message: 'Error creating Razorpay order', error: error.message });
+    }
+};
+
+exports.verifyPaymentAndBook = async (req, res) => {
+    try {
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, bookingData } = req.body;
+        const user_id = req.user.id;
+        const { vehicle_number, parking_location_id, slot_id, date, start_time, duration } = bookingData;
+
+        const hmac = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET);
+        hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
+        const generated_signature = hmac.digest('hex');
+
+        if (generated_signature !== razorpay_signature) {
+            return res.status(400).json({ message: 'Payment verification failed. Invalid signature.' });
+        }
+
+        const startHour = parseInt(start_time.split(':')[0]);
+        const endHour = (startHour + parseInt(duration)) % 24;
+        const startTimeStr = ${startHour.toString().padStart(2, '0')}:00:00;
+        const end_time = ${endHour.toString().padStart(2, '0')}:00:00;
+
+        const overlapQuery = \
+            SELECT id FROM bookings 
+            WHERE parking_location_id = ? 
+            AND slot_id = ?
+            AND booking_date = ? 
+            AND booking_status = 'CONFIRMED'
+            AND start_time < ? 
+            AND end_time > ?
+        \;
+        const [overlapping] = await db.query(overlapQuery, [parking_location_id, slot_id, date, end_time, startTimeStr]);
+        
+        if (overlapping.length > 0) {
+            return res.status(409).json({ message: 'This slot was booked by someone else while you were paying. Please contact support for a refund.' });
+        }
+
+        const amount = parseInt(duration) * 40;
+        let vehicle_id;
+        const [existingVehicles] = await db.query('SELECT id FROM vehicles WHERE user_id = ? AND vehicle_number = ?', [user_id, vehicle_number]);
+        if (existingVehicles.length > 0) {
+            vehicle_id = existingVehicles[0].id;
+        } else {
+            const [newVehicle] = await db.query(
+                'INSERT INTO vehicles (user_id, vehicle_number, vehicle_type) VALUES (?, ?, ?)',
+                [user_id, vehicle_number, 'CAR']
+            );
+            vehicle_id = newVehicle.insertId;
+        }
+
+        const [bookingResult] = await db.query(
+            \INSERT INTO bookings 
+            (user_id, vehicle_id, parking_location_id, slot_id, booking_date, start_time, end_time, duration, amount, payment_status, booking_status) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'PAID', 'CONFIRMED')\,
+            [user_id, vehicle_id, parking_location_id, slot_id, date, startTimeStr, end_time, duration, amount]
+        );
+        
+        const booking_id = bookingResult.insertId;
+
+        await db.query(
+            \INSERT INTO payments (booking_id, user_id, amount, payment_method, transaction_id, payment_status, paid_at) 
+            VALUES (?, ?, ?, 'RAZORPAY', ?, 'SUCCESS', NOW())\,
+            [booking_id, user_id, amount, razorpay_payment_id]
+        );
+
+        const io = req.app.get('io');
+        if (io) {
+            io.emit('booking_updated', { parking_location_id });
+        }
+
+        res.status(200).json({ message: 'Payment verified and booking confirmed successfully!' });
+    } catch (error) {
+        console.error("Payment Verification Error:", error);
+        res.status(500).json({ message: 'Server Error verifying payment.', error: error.message });
+    }
+};
